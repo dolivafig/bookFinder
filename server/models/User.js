@@ -23,6 +23,10 @@ const userSchema = new Schema(
     },
     // set savedBooks to be an array of data that adheres to the bookSchema
     savedBooks: [bookSchema],
+    // {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'bookSchema'
+    // }
   },
   // set this to use virtual below
   {
