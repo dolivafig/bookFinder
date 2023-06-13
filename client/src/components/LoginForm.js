@@ -7,11 +7,11 @@ import { LOGIN_USER } from '../utils/mutations';
 // import { loginUser } from '../utils/API';
 import Auth from '../utils/auth';
 
-const LoginForm = () => {
+const LoginForm = (props) => {
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
+  const [login,  { data } ] = useMutation(LOGIN_USER);
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [login, {error, data}] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -29,13 +29,13 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await login({
+      await login({
         variables: { ...userFormData },
       });
 
       Auth.login(data.login.token);
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
       setShowAlert(true);
       throw new Error('something went wrong!');
     }

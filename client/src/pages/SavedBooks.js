@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Card,
@@ -17,27 +17,42 @@ import { useQuery } from '@apollo/client';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
-  const { loading, error, data } = useQuery(GET_ME);
-  
-  useEffect(() => {
-    if (data) {
-      getUserData(data);
-    }}
-    , [userDataLength]);
-    
-    const [deleteBook, { err }] = useMutation(REMOVE_BOOK);
-
-  // use this to determine if `useEffect()` hook needs to run again
+  const { data } = useQuery(GET_ME);
   const userDataLength = Object.keys(userData).length;
+    
+    const [deleteBook] = useMutation(REMOVE_BOOK, {
+      update(cache, {data: {deleteBook}}) {
+        try{
+          cache.writeQuery({
+            query: GET_ME,
+            data: {me: deleteBook},
+          });
+        } catch(e) {
+          console.error(e);
+        }
+      },
+    });
 
-  const getUserData = (data) => {
+    const getUserData = async () => {
+      try {
+        const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-    if(loading) return 'Loading...';
-    if(error) return `Error! ${error.message}`;
-
-setUserData(data);
-
-  };
+        if (!token) {
+          return false;
+        }
+        const response = data;
+        if (!response.ok) {
+                  throw new Error('something went wrong!');
+                }
+        
+                const user = await response.json();
+                setUserData(user);
+              } catch (err) {
+                console.error(err);
+              }
+            };
+        
+            getUserData(data);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
