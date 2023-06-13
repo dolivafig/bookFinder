@@ -43,7 +43,7 @@ const SearchBooks = () => {
       const response = await searchGoogleBooks(searchInput);
 console.log(response);
       if (!response.ok) {
-        throw new Error('something went wrong!');
+        throw new Error(error);
       }
 
       const { items } = await response.json();
@@ -130,8 +130,8 @@ console.log(response);
         <Row>
           {searchedBooks.map((book) => {
             return (
-              <Col md="4">
-                <Card key={book.bookId} border='dark'>
+              <Col key={book.bookId} md="4">
+                <Card border='dark'>
                   {book.image ? (
                     <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
                   ) : null}

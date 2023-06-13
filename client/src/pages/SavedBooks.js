@@ -19,7 +19,10 @@ const SavedBooks = () => {
   const [userData, setUserData] = useState({});
   const { data } = useQuery(GET_ME);
   const userDataLength = Object.keys(userData).length;
+  // const bookCount = data.me.bookCount;
+  // console.log(bookCount);
   console.log(data);
+  console.log(Object.keys(userData));
     const [deleteBook] = useMutation(REMOVE_BOOK, {
       update(cache, {data: {deleteBook}}) {
         try{
