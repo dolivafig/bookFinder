@@ -41,7 +41,7 @@ const SearchBooks = () => {
 
     try {
       const response = await searchGoogleBooks(searchInput);
-
+console.log(response);
       if (!response.ok) {
         throw new Error('something went wrong!');
       }
@@ -80,7 +80,7 @@ console.log(bookToSave);
       const response = await save({
         variables: {
           bookToSave
-        }
+        },
       });
 console.log(response);
       if (!response.ok) {
