@@ -61,11 +61,6 @@ const resolvers = {
             }
             throw new AuthenticationError("Log in to proceed.")
         }
-    },
-    User: {
-        savedBooks: (parent) => {
-            return parent.savedBooks;
-        }
     }
 };
 
