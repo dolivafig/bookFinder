@@ -7,13 +7,14 @@ const resolvers = {
     Query: {
         me: async (parent, args, context) => {
             if (context.user) {
-                const user = User.findOne({ _id: context.user_id }).select('-__v -password')
+                const user = User.findOne({ _id: context.user._id }).select('-__v -password')
                 return user;
             }
             throw new AuthenticationError("Log in to proceed.")
-        }
+        },
     },
-    Mutations: {
+
+    Mutation: {
         login: async (parent, { email, password }) => {
             const user = await User.findOne({ email });
             if (!user) {
@@ -60,6 +61,12 @@ const resolvers = {
             }
             throw new AuthenticationError("Log in to proceed.")
         }
-    },};
+    },
+    User: {
+        savedBooks: (parent) => {
+            return parent.savedBooks;
+        }
+    }
+};
 
     module.exports = resolvers;
