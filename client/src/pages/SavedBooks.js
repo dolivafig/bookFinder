@@ -17,13 +17,40 @@ import { useQuery } from '@apollo/client';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
-  const { data } = useQuery(GET_ME);
   const userDataLength = Object.keys(userData).length;
   // const bookCount = data.me.bookCount;
   // console.log(bookCount);
-  console.log(data);
+  const  {data}  = useQuery(GET_ME);
+  console.log({data});
   console.log(Object.keys(userData));
-    const [deleteBook] = useMutation(REMOVE_BOOK, {
+
+
+  // useEffect(() => {
+  //   const getUserData = async () => {
+  //     try {
+  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+  //       if (!token) {
+  //         return false;
+  //       }
+
+  //       const response = await getMe(token);
+
+  //       if (!response.ok) {
+  //         throw new Error('something went wrong!');
+  //       }
+
+  //       const user = await response.json();
+  //       setUserData(user);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
+  //   getUserData();
+  // }, [userDataLength]);
+
+  const [deleteBook] = useMutation(REMOVE_BOOK, {
       update(cache, {data: {deleteBook}}) {
         try{
           cache.writeQuery({
@@ -35,27 +62,27 @@ const SavedBooks = () => {
         }
       },
     });
-
-    const getUserData = async () => {
-      try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-        if (!token) {
-          return false;
-        }
-        const response = data;
-        if (!response.ok) {
-                  throw new Error('something went wrong!');
-                }
-        
-                const user = await response.json();
-                setUserData(user);
-              } catch (err) {
-                console.error(err);
+if(data){
+  const getUserData = async () => {
+    try {
+      const token = Auth.loggedIn() ? Auth.getToken() : null;
+console.log(token);
+      if (!token) {
+        return false;
+      }
+      if (!data.ok) {
+                throw new Error('something went wrong!');
               }
-            };
-        
-            getUserData(data);
+              const user = await data.json();
+              setUserData(user);
+            } catch (err) {
+              console.error(err);
+            }
+          };
+      
+          getUserData(data);
+
+};
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -66,7 +93,7 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook({ bookId, token });
+      const response = await deleteBook({ variables: bookId });
 
       if (!response.ok) {
         throw new Error('something went wrong!');

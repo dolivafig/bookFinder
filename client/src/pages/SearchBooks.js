@@ -78,8 +78,7 @@ console.log(bookToSave);
 
     try {
       const response = await save({
-        variables: {
-          bookToSave
+        variables: { bookData: {...bookToSave}
         },
       });
 console.log(response);
