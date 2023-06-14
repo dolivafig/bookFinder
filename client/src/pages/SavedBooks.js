@@ -17,53 +17,51 @@ import { useQuery } from '@apollo/client';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
-  const userDataLength = Object.keys(userData).length;
+  // const userDataLength = Object.keys(userData).length;
   // const bookCount = data.me.bookCount;
   // console.log(bookCount);
-  const  {data}  = useQuery(GET_ME);
+  const  {error, data: {me:data} ={} }  = useQuery(GET_ME);
   console.log({data});
   console.log(Object.keys(userData));
+  console.log('userData '+ userData);
+    // const getUserData = async () => {
+    //   try {
+    //     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
+    //     if (!token) {
+    //       return false;
+    //     }
 
-  // useEffect(() => {
-  //   const getUserData = async () => {
-  //     try {
-  //       const token = Auth.loggedIn() ? Auth.getToken() : null;
+    //     const response = await getMe(token);
 
-  //       if (!token) {
-  //         return false;
+    //     if (!response.ok) {
+    //       throw new Error('something went wrong!');
+    //     }
+
+    //     const user = await response.json();
+    //     setUserData(user);
+    //   } catch (err) {
+    //     console.error(err);
+    //   }
+    // };
+
+    // getUserData();
+
+  const [deleteBook] = useMutation(REMOVE_BOOK);
+  // , {
+  //     update(cache, {data: {deleteBook}}) {
+  //       try{
+  //         cache.writeQuery({
+  //           query: GET_ME,
+  //           data: {me: deleteBook},
+  //         });
+  //       } catch(e) {
+  //         console.error(e);
   //       }
+  //     },
+  //   });
 
-  //       const response = await getMe(token);
-
-  //       if (!response.ok) {
-  //         throw new Error('something went wrong!');
-  //       }
-
-  //       const user = await response.json();
-  //       setUserData(user);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-
-  //   getUserData();
-  // }, [userDataLength]);
-
-  const [deleteBook] = useMutation(REMOVE_BOOK, {
-      update(cache, {data: {deleteBook}}) {
-        try{
-          cache.writeQuery({
-            query: GET_ME,
-            data: {me: deleteBook},
-          });
-        } catch(e) {
-          console.error(e);
-        }
-      },
-    });
-if(data){
-  const getUserData = async () => {
+  const getUserData = async (data) => {
     try {
       const token = Auth.loggedIn() ? Auth.getToken() : null;
 console.log(token);
@@ -82,10 +80,9 @@ console.log(token);
       
           getUserData(data);
 
-};
-
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
+    
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
@@ -93,7 +90,7 @@ console.log(token);
     }
 
     try {
-      const response = await deleteBook({ variables: bookId });
+      const response = await deleteBook({ variables: {bookId: bookId }});
 
       if (!response.ok) {
         throw new Error('something went wrong!');
@@ -109,7 +106,7 @@ console.log(token);
   };
 
   // if data isn't here yet, say so
-  if (!userDataLength) {
+  if (!data) {
     return <h2>LOADING...</h2>;
   }
 
@@ -122,12 +119,12 @@ console.log(token);
       </div>
       <Container>
         <h2 className='pt-5'>
-          {userData.savedBooks.length
-            ? `Viewing ${userData.savedBooks.length} saved ${userData.savedBooks.length === 1 ? 'book' : 'books'}:`
+          {data.bookCount
+            ? `Viewing ${data.bookCount} saved ${data.bookCount === 1 ? 'book' : 'books'}:`
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks.map((book) => {
+          {data.savedBooks.map((book) => {
             return (
               <Col md="4">
                 <Card key={book.bookId} border='dark'>

@@ -43,7 +43,7 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 
 ## The following is a screenshot of the final product:
 
-![alt text]()
+![alt text](./client/public/GoogleBookSearch.png)
 
 
 ## Click [here](https://github.com/dolivafig/bookFinder) to see the repo on gitHub.
